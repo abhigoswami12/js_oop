@@ -1,33 +1,38 @@
-console.log(this.document === document); // Output
+console.log(this.document === document); // Output: true
 
-console.log(this === window); //Output
+console.log(this === window); //Output: true
 
 var myFunction = function() {
   console.log(this);
 };
-myFunction(); // Output
+myFunction(); // Output: When there is no object to the left of the called function then `this` takes reference from the window. So, here, it will create an object taking reference from the window.
 
+//DOUBT IN THIS CONCEPT
 function f1() {
   "use strict";
   return this;
 }
-console.log(f1() === window); //Output
+console.log(f1() === window); //Output:false. Had there been no "use strict", output would have been true.
 
 function foo() {
   console.log("Simple function call");
   console.log(this === window);
 }
 
-foo(); //Output ??
-console.log(this === window)(
-  // Output
+foo(); //Output: Simple function call
+             //  true
+
+
+console.log(this === window)
+  // Output: true
 
   // This for IIFE
-  function() {
+  (function () {
     console.log("Anonymous function invocation");
     console.log(this === window);
   }
-)(); //Output
+)(); //Output: Anonymous function invocation
+             //true
 
 // This for IIFE in strict mode
 function foo() {
