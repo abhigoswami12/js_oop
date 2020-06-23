@@ -17,11 +17,44 @@
             <button class="btn">Save & Next</button>
             <p class="error"></p>
         </div>
-        <p class="final-score"></p>
-        <p class="comment"></p>
-        <button class="restart-btn"></button>
+        <div class="score">
+            <p class="final-score"></p>
+            <p class="comment"></p>
+        </div>
+    </div>
+    
+    <div class="table-wrapper">
+        <div class="restart-flex">
+            <p class="result-text"></p>
+            <button class="restart-btn"></button>
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Questions</th>
+                    <th>Correct Answers</th>
+                    <th>You Selected</th>
+                    <th>Right or Wrong</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="total-correct-text">Total Correct</td>
+                    <td class="total-correct"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" class="total-wrong-text">Total Wrong</td>
+                    <td class="total-wrong"></td>
+                </tr>
+                
+            </tfoot>
+        </table>
     </div>
     <script src="./index.js"></script>
+    <script src="https://kit.fontawesome.com/a134e01e87.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

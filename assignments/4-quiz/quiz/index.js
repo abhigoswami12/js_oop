@@ -86,11 +86,11 @@ class Quiz {
 
     errorMsg.innerText = "";
     displayScore.innerText = "";
-    console.log("index before click is", this.activeQuestionIndex);
-    this.activeQuestionIndex = activeQuestionIndex + 1;
+    console.log("index before click is", activeQuestionIndex);
+    activeQuestionIndex = activeQuestionIndex + 1;
     // console.log(this.questions.length)
-    console.log("index after click is", this.activeQuestionIndex)
-    if(this.activeQuestionIndex >= 5) {
+    console.log("index after click is", activeQuestionIndex)
+    if(activeQuestionIndex >= 5) {
       root.style.display = "none";
       nextBtn.style.display = "none";
       displayScore.innerText = `final score is ${ this.score }`
@@ -99,9 +99,9 @@ class Quiz {
       
     }
     this.rootElm.innerHTML = this.questions[
-      this.activeQuestionIndex
+      activeQuestionIndex
     ].createUI();
-    this.scoreUpdate(this.questions[this.activeQuestionIndex]);
+    this.scoreUpdate(this.questions[activeQuestionIndex]);
   }
   
   rootUI() {

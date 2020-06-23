@@ -20,7 +20,6 @@ class Question {
         return this.options[this.correctAnswerIndex];
     }
     createUI(index,questions) {
-        console.log(index)
         return `
         <div>
             <div class="progress-bar">
@@ -54,32 +53,41 @@ class Question {
         `;
     }
 }
+let questionsArr = [
+  {
+    title: "Which element is used to provide title of the page?",
+    options: ["heading", "head", "title", "h1"],
+    isCorrect: 2
+  },
+  {
+    title: "Which HTML element is used for displaying the biggest heading?",
+      options: ["h1", "h3", "h6", "h7"],
+    isCorrect: 0
+  },
+  {
+      title: "Which element is used to emphasize text?",
+      options: ["i", "em", "itali", "italics"],
+    isCorrect: 1
+  },
+  {
+      title: "How many heading elements are there in HTML5?",
+      options: ["1", "3", "6", "7"],
+    isCorrect: 2
+  },
+  {
+      title: "Which tag is used to link pages?",
+      options: ["link", "a", "href", "ref"],
+    isCorrect: 0
+  }
+];
+let questionsArrMapped = questionsArr.map(question => new Question(question.title, question.options, question.isCorrect))
+    
+    
 
-let questionOne = new Question(
-    "Which element is used to provide title of the page?",
-    ["heading", "head", "title", "h1"],
-    2
-);
-let questionTwo = new Question(
-    "Which HTML element is used for displaying the biggest heading?",
-    ["h1", "h3", "h6", "h7"],
-    0
-);
-let questionThree = new Question(
-    "Which element is used to emphasize text?",
-    ["i", "em", "itali", "italics"],
-    1
-);
-let questionFour = new Question(
-    "How many heading elements are there in HTML5?",
-    ["1", "3", "6", "7"],
-    2
-);
-let questionFive = new Question(
-    "Which tag is used to link pages?",
-    ["link", "a", "href", "ref"],
-    0
-);
+let question = new Question();
+let questionThree = new Question();
+let questionFour = new Question();
+let questionFive = new Question();
 // let questionSix = new Question(
 //   "Which tag is used to link pages?",
 //   ["link", "a", "href", "ref"],
@@ -114,157 +122,176 @@ let displayScore = document.querySelector(".final-score");
 let errorMsg = document.querySelector(".error")
 let optionsList = document.querySelector(".options")
 let comment = document.querySelector(".comment")
+let tbody = document.querySelector("tbody");
+let tfoot = document.querySelector("tfoot");
+let table = document.querySelector(".table");
+let resultText = document.querySelector(".result-text");
+let totalCorrect = document.querySelector(".total-correct");
+let totalWrong = document.querySelector(".total-wrong");
+let counterCorrect = 0;
+let counterWrong = 0;
+
 
 class Quiz {
     constructor(rootElm, nextElm, questions) {
         this.questions = questions;
         this.rootElm = rootElm;
         this.nextElm = nextElm;
-        this.activeQuestionIndex = 0;
+        this.activeQuestionIndex = localStorage.getItem("quiz")
+          ? JSON.parse(localStorage.getItem("quiz"))
+          : 0;
         this.score = 0;
     }
-    nextQuestion(activeQuestionIndex) {
+    nextQuestion(activeQuestionIndex, userSelectedAns) {
+        // console.log("index", this.questions[this.activeQuestionIndex].title)
         errorMsg.innerText = "";
-        // console.log(errorMsg)
-        displayScore.innerText = "";
-        this.activeQuestionIndex = activeQuestionIndex + 1;
-        if (this.activeQuestionIndex >= this.questions.length) {
-            this.rootElm.style.display = "none";
-            this.nextElm.style.display = "none";
-            displayScore.innerText = `Score: ${this.score}`;
-            if(this.score <= 1){
-                comment.innerText = "Poor!! You need to Work Hard!!";
-                comment.style.color = "red";
-            }else if (this.score > 1 && this.score < 3){
-                comment.innerText = "Good!! But need to go through the Concepts thoroughly!!"
-                comment.style.color = "rgb(243, 210, 63)";
-            }else {
-                comment.innerText= "Excellent!! Keep up the Good Work!!"
-                comment.style.color = "green";
-            }
-            restartBtn.style.display = "block";
-            restartBtn.innerText = "Retake the Quiz"
-            // console.log(this.questions[this.activeQuestionIndex])
-            restartBtn.addEventListener("click", restartFn)
+        // table.style.display = "none";
+        
+
+        let tr = document.createElement("tr");
+        let td1 = document.createElement("td")
+        let td2 = document.createElement("td");
+        let td3 = document.createElement("td");
+        let td4 = document.createElement("td");
+        td1.innerText = this.questions[this.activeQuestionIndex].title;
+        td2.innerText = this.questions[this.activeQuestionIndex].getCorrectAnswer();
+        td3.innerText = userSelectedAns;
+        
+        
+        if(td2.innerText === td3.innerText) {
+            counterCorrect++;
+            // console.log("counter", counter)
+            let correct = document.createElement("i");
+            correct.className = "far fa-check-circle";
+            td4.append(correct);
+            // console.log(td4)
+        } else {
+            counterWrong++;
+            let wrong = document.createElement("i");
+            wrong.className = "far fa-times-circle";
+            td4.append(wrong);
+            // console.log(td4)
+        }
 
             
+        
+        tbody.append(tr);
+        tr.append(td1, td2, td3,td4);
+        totalCorrect.innerText = `${counterCorrect}`;
+        totalWrong.innerText = `${counterWrong}`
+        
+        
 
-            // console.log(quiz)
+        // displayScore.innerText = "";
+        // localStorage.getItem("todos")
+        //     ? JSON.parse(localStorage.getItem("todos"))
+        //     : [];
+        window.addEventListener("load", (event) => {
+            // console.log("loaded");
+            this.activeQuestionIndex = localStorage.getItem("quiz")
+            ? JSON.parse(localStorage.getItem("quiz"))
+            : activeQuestionIndex + 1;
+            // console.log(this.activeQuestionIndex)
+            // if (this.activeQuestionIndex >= this.questions.length) {
+            //     this.displayResult();
+                
+            //     return;
+            // }
+            // this.rootElm.innerHTML = this.questions[
+            //     this.activeQuestionIndex
+            // ].createUI(this.activeQuestionIndex + 1, this.questions);
+            // let progress = document.querySelector("progress");
+            // progress.value = progress.value * (this.activeQuestionIndex + 1);
+            let quiz = new Quiz(root, nextBtn, questionsArrMapped);
+            quiz.rootUI(0.25)
+        });
+        // this.activeQuestionIndex = localStorage.getItem("quiz") ? JSON.parse(localStorage.getItem("quiz")) : activeQuestionIndex + 1;
+        this.activeQuestionIndex = this.activeQuestionIndex+1;
+        localStorage.setItem("quiz", JSON.stringify(this.activeQuestionIndex))
+        if (this.activeQuestionIndex >= this.questions.length) {
+            this.displayResult();
+           
             return;
         }
         this.rootElm.innerHTML = this.questions[
           this.activeQuestionIndex
         ].createUI(this.activeQuestionIndex + 1, this.questions);
         let progress = document.querySelector("progress")
-        // console.log(this.activeQuestionIndex)
         progress.value = progress.value * (this.activeQuestionIndex+1);
-        // console.log(progress.value)
 
 
     }
-    // restartFn() {
-        
-    //     this.questions = [questionOne, questionTwo, questionThree, questionFour, questionFive];
-    //     this.activeQuestionIndex = 0;
-    //     // quiz.rootUI(); 
-    //     // this.rootElm.innerHTML = this.questions[
-    //     //     this.activeQuestionIndex
-    //     // ].createUI(this.activeQuestionIndex + 1, this.questions);
-    //     this.rootElm.innerHTML = this.questions[
-    //         this.activeQuestionIndex
-    //     ].createUI(this.activeQuestionIndex + 1, this.questions);
-    //     restartBtn.style.display = "none";
-    //     displayScore.innerText = "";
-    //     comment.innerText = "";
-    //     root.style.display = "block";
-    //     nextBtn.style.display = "block";
-    // }
-    
-    rootUI() {
+    displayResult() {
+
+        table.style.display = "block";
+        this.rootElm.style.display = "none";
+        this.nextElm.style.display = "none";
+        displayScore.innerText = `Score: ${this.score}`;
+        if (this.score <= 1) {
+            comment.innerText = "Poor!! You need to Work Hard!!";
+            comment.style.color = "red";
+        } else if (this.score > 1 && this.score < 3) {
+            comment.innerText = "Good!! But need to go through the Concepts thoroughly!!"
+            comment.style.color = "rgb(243, 210, 63)";
+        } else {
+            comment.innerText = "Excellent!! Keep up the Good Work!!"
+            comment.style.color = "green";
+        }
+        resultText.style.display = "block";
+        resultText.innerText = "Result of The Quiz"
+        restartBtn.style.display = "block";
+        restartBtn.innerText = "Retake the Quiz"
+        restartBtn.addEventListener("click", restartFn)
+    }
+    rootUI(negativeMarks = 0) {
         this.rootElm.style.display = "block";
-        this.nextElm.style.display = "block"
+        this.nextElm.style.display = "block";
+       
         this.nextElm.addEventListener("click", () => {
             let inputs = document.querySelectorAll("input");
             let selectedInput = [...inputs].filter((input) => {
                 return input.checked
             });
-            // console.log("selectedInput",selectedInput[0], inputs)
             if (!selectedInput[0]) {
                 errorMsg.innerText = "Select an Answer to go forward!";
                 return;
             }
-            console.log(this.questions, this.activeQuestionIndex)
+            // console.log(this.questions, this.activeQuestionIndex)
             const currentQuestion = this.questions[this.activeQuestionIndex];
+            // console.log(currentQuestion.isCorrect())
+            
             if (currentQuestion.isCorrect(selectedInput[0].value)) {
                 this.score++;
             } else {
-                this.score--;
+                this.score = this.score - negativeMarks;
             }
-            this.nextQuestion(this.activeQuestionIndex)
+            this.nextQuestion(this.activeQuestionIndex, selectedInput[0].value)
         });
         
         
         this.rootElm.innerHTML = this.questions[
           this.activeQuestionIndex
         ].createUI(this.activeQuestionIndex + 1, this.questions);
+        resultText.style.display = "none";
         restartBtn.style.display = "none";
         displayScore.innerText = "";
         comment.innerText = "";
-        // console.log(optionsList)
-        // optionsList.forEach(e => e.addEventListener("click", (event) => {
-        //     console.log(event.target)
-        //     event.target.style.backgroundColor = "blue"}))
-        
+        table.style.display = "none";
     }
 }
 
-let quiz = new Quiz(root, nextBtn, [
-  questionOne,
-  questionTwo,
-  questionThree,
-  questionFour,
-  questionFive
-]);
-    quiz.rootUI(); 
+let quiz = new Quiz(root, nextBtn, questionsArrMapped);
+    quiz.rootUI(0.25); 
 
     function restartFn() {
-        let quiz = new Quiz(root, nextBtn, [
-            questionOne,
-            questionTwo,
-            questionThree,
-            questionFour,
-            questionFive
-        ]);
-        nextBtn.removeEventListener("click", () => { });
-        quiz.rootUI(); 
-        
-
+        let quiz = new Quiz(root, nextBtn, questionsArrMapped);
+        quiz.rootUI(0.25); 
+        tbody.innerHTML = "";
     }
     
-    // 1.if (
-        //     inputs[0].checked == false &&
-        //     inputs[1].checked == false &&
-        //     inputs[2].checked == false &&
-        //     inputs[3].checked == false
-        // ) {
-            // errorMsg.innerText = "cannot go ahead!";
-            //   return;
-            // }
-            //2. scoreUpdate(currentQuestion) {
-                //     let inputs = document.querySelectorAll("input")
-                //     inputs.forEach((input, index) => {
-                    //         if (input.checked === true) {
-                        //         }
-                        //         input.addEventListener("click", (event) => {
-                            //             this.currentQuestionAns = event.target.value
-                            //         });
-                            //     });
-                            // }
-                            //3. this.scoreUpdate(this.questions[this.activeQuestionIndex]);
-                            //4. this.scoreUpdate(this.questions[this.activeQuestionIndex]);
-                            //5. if (currentQuestion.isCorrect(this.currentQuestionAns)) {
-// questionSix,
-//     questionSeven,
-//     questionEight,
-//     questionNine,
-//     questionTen
+
+// let tdfoot1 = document.createElement("td");
+// let tdfoot2 = document.createElement("td");
+// tdfoot1.innerText = "Total Correct";
+// tdfoot2.innerText =
+//     tfoot.append(tdfoot1);
