@@ -140,13 +140,13 @@ class Quiz {
         this.activeQuestionIndex = localStorage.getItem("quiz")
           ? JSON.parse(localStorage.getItem("quiz"))
           : 0;
-        this.score = 0;
+        this.score = localStorage.getItem("score") ? JSON.parse(localStorage.getItem("score")) : 0;
     }
     nextQuestion(activeQuestionIndex, userSelectedAns) {
         // console.log("index", this.questions[this.activeQuestionIndex].title)
         errorMsg.innerText = "";
         // table.style.display = "none";
-        
+        console.log(activeQuestionIndex)
 
         let tr = document.createElement("tr");
         let td1 = document.createElement("td")
@@ -181,30 +181,6 @@ class Quiz {
         totalWrong.innerText = `${counterWrong}`
         
         
-
-        // displayScore.innerText = "";
-        // localStorage.getItem("todos")
-        //     ? JSON.parse(localStorage.getItem("todos"))
-        //     : [];
-        window.addEventListener("load", (event) => {
-            // console.log("loaded");
-            this.activeQuestionIndex = localStorage.getItem("quiz")
-            ? JSON.parse(localStorage.getItem("quiz"))
-            : activeQuestionIndex + 1;
-            // console.log(this.activeQuestionIndex)
-            // if (this.activeQuestionIndex >= this.questions.length) {
-            //     this.displayResult();
-                
-            //     return;
-            // }
-            // this.rootElm.innerHTML = this.questions[
-            //     this.activeQuestionIndex
-            // ].createUI(this.activeQuestionIndex + 1, this.questions);
-            // let progress = document.querySelector("progress");
-            // progress.value = progress.value * (this.activeQuestionIndex + 1);
-            let quiz = new Quiz(root, nextBtn, questionsArrMapped);
-            quiz.rootUI(0.25)
-        });
         // this.activeQuestionIndex = localStorage.getItem("quiz") ? JSON.parse(localStorage.getItem("quiz")) : activeQuestionIndex + 1;
         this.activeQuestionIndex = this.activeQuestionIndex+1;
         localStorage.setItem("quiz", JSON.stringify(this.activeQuestionIndex))
@@ -220,6 +196,7 @@ class Quiz {
         progress.value = progress.value * (this.activeQuestionIndex+1);
 
 
+        window.addEventListener("load", instantiatefn);
     }
     displayResult() {
 
@@ -242,6 +219,7 @@ class Quiz {
         restartBtn.style.display = "block";
         restartBtn.innerText = "Retake the Quiz"
         restartBtn.addEventListener("click", restartFn)
+        localStorage.clear();
     }
     rootUI(negativeMarks = 0) {
         this.rootElm.style.display = "block";
@@ -265,6 +243,7 @@ class Quiz {
             } else {
                 this.score = this.score - negativeMarks;
             }
+            localStorage.setItem("score", JSON.stringify(this.score))
             this.nextQuestion(this.activeQuestionIndex, selectedInput[0].value)
         });
         
@@ -288,6 +267,10 @@ let quiz = new Quiz(root, nextBtn, questionsArrMapped);
         quiz.rootUI(0.25); 
         tbody.innerHTML = "";
     }
+function instantiatefn() {
+    let quiz = new Quiz(root, nextBtn, questionsArrMapped);
+    quiz.rootUI(0.25);
+}
     
 
 // let tdfoot1 = document.createElement("td");
